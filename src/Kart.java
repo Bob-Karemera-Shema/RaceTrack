@@ -11,7 +11,7 @@ public class Kart
 
     public Kart(int x, int y)
     {
-        location = new Point( x, y );          //kart starting position
+        location = new Point( x, y );                   //kart starting position
         speed = 0;                                      //kart starts at rest
         direction = 0;                                  //initial kart direction
     }
@@ -19,13 +19,14 @@ public class Kart
     public int getCurrentImage()
     {
         return image;
-    }
+    }      //return current kart image index
 
-    public void displaceKart()                          //displace image
+    public void displaceKart()
     {
+        //displace kart image
         if(direction == 0)
         {
-            location.x = (int) (location.x - speed);
+            location.x = (int) (location.x - 2 * speed);
         }
         else if(direction == 1)
         {
@@ -107,7 +108,7 @@ public class Kart
         {
             direction--;
 
-            if(direction == 0)
+            if(direction <= 0)
             {    direction = 15;    }
 
             image = direction;
@@ -116,7 +117,7 @@ public class Kart
         {
             direction++;
 
-            if(direction == 15)
+            if(direction >= 15)
             {    direction = 0;     }
 
             image = direction;
@@ -126,19 +127,23 @@ public class Kart
     public void increaseSpeed()
     {
         speed += 1;
-    }
+    }           //increase kart speed
 
-    public void decreaseSpeed()
+    public void decreaseSpeed()                           //decrease kart speed
     {
         speed -= 1;
 
-
         if(speed <= 0)
-            speed = 0;
+            stopKart();
     }
 
     public Point getLocation()
     {
         return location;
+    }
+
+    public void stopKart()
+    {
+        speed = 0;
     }
 }

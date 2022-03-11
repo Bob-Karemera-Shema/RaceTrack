@@ -142,6 +142,12 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
 
     public void collisionDetection()
     {
+        //g.fillRect( 50, 100, 750, 500 );
+        // outer edge detection
+        if(kart1.getLocation().x == 50 | kart1.getLocation().x == 750 | kart1.getLocation().y == 100 | kart1.getLocation().y == 500)
+        {   kart1.stopKart(); }
 
+        if(kart2.getLocation().x == 50 | kart2.getLocation().x == 750 | kart2.getLocation().y == 100 | kart2.getLocation().y == 500)
+        {   kart2.stopKart(); }
     }
 }
