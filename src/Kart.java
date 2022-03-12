@@ -132,9 +132,6 @@ public class Kart
     public void decreaseSpeed()                           //decrease kart speed
     {
         speed -= 1;
-
-        if(speed <= 0)
-            stopKart();
     }
 
     public Point getLocation()
@@ -145,5 +142,9 @@ public class Kart
     public void stopKart()
     {
         speed = 0;
+    }
+
+    public Rectangle getBounds(){
+        return new Rectangle(getLocation().x,getLocation().y,50,50);
     }
 }

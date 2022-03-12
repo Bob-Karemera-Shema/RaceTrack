@@ -70,6 +70,7 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
         {
             kart1.displaceKart();
             kart2.displaceKart();
+            collisionDetection();
         }
     }
 
@@ -140,14 +141,24 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
 
     }
 
-    public void collisionDetection()
+    public void collisionDetection()                //collision detection method
     {
-        //g.fillRect( 50, 100, 750, 500 );
-        // outer edge detection
-        if(kart1.getLocation().x == 50 | kart1.getLocation().x == 750 | kart1.getLocation().y == 100 | kart1.getLocation().y == 500)
-        {   kart1.stopKart(); }
+        Rectangle car1 = kart1.getBounds();         //kart1 bounds
+        Rectangle car2 = kart2.getBounds();         //kart2 bounds
 
-        if(kart2.getLocation().x == 50 | kart2.getLocation().x == 750 | kart2.getLocation().y == 100 | kart2.getLocation().y == 500)
-        {   kart2.stopKart(); }
+        if(car1.intersects(car2)) {                 //check if rectangles intersect
+            kart1.stopKart();
+            kart2.stopKart();
+        }
+
+        Rectangle outerEdge = new Rectangle(50, 100, 750, 500);         //racetrack outer bounds
+        Rectangle innerEdge = new Rectangle(150, 200, 550, 300);        //racetrack inner bounds
+
+        //check whether karts collide with racetrack boundaries
+        if(car1.intersects(outerEdge) || car1.intersects(innerEdge))
+        {   kart1.stopKart();   }
+
+        if(car2.intersects(outerEdge) || car2.intersects(innerEdge))
+        {   kart2.stopKart();   }
     }
 }
