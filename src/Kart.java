@@ -108,7 +108,7 @@ public class Kart
         {
             direction--;
 
-            if(direction <= 0)
+            if(direction < 0)
             {    direction = 15;    }
 
             image = direction;
@@ -117,7 +117,7 @@ public class Kart
         {
             direction++;
 
-            if(direction >= 15)
+            if(direction > 15)
             {    direction = 0;     }
 
             image = direction;

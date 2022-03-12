@@ -153,12 +153,5 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
 
         Rectangle outerEdge = new Rectangle(50, 100, 750, 500);         //racetrack outer bounds
         Rectangle innerEdge = new Rectangle(150, 200, 550, 300);        //racetrack inner bounds
-
-        //check whether karts collide with racetrack boundaries
-        if(car1.intersects(outerEdge) || car1.intersects(innerEdge))
-        {   kart1.stopKart();   }
-
-        if(car2.intersects(outerEdge) || car2.intersects(innerEdge))
-        {   kart2.stopKart();   }
     }
 }
