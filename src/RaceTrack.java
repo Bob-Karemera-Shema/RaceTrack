@@ -66,7 +66,7 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
         kartImages1[kart1.getCurrentImage()].paintIcon(this, g, kart1.getLocation().x, kart1.getLocation().y);
         kartImages2[kart2.getCurrentImage()].paintIcon(this, g, kart2.getLocation().x, kart2.getLocation().y);
 
-        if(animationTimer.isRunning())                  //Only refreshes the screen if the timer is working
+        if(animationTimer.isRunning())                  //Only refreshes kart locations if timer is running
         {
             kart1.displaceKart();
             kart2.displaceKart();
@@ -102,35 +102,35 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_UP)
+        if(e.getKeyCode() == KeyEvent.VK_UP)                        //increase kart1 speed if up key is pressed
         {
             kart1.increaseSpeed();
         }
-        else if (e.getKeyCode() == KeyEvent.VK_DOWN)
+        else if (e.getKeyCode() == KeyEvent.VK_DOWN)                //decrease kart1 speed if down key is pressed
         {
             kart1.decreaseSpeed();
         }
-        else if (e.getKeyCode() == KeyEvent.VK_LEFT)
+        else if (e.getKeyCode() == KeyEvent.VK_LEFT)                //turn kart1 left if left key is pressed
         {
             kart1.updateDirection("left");
         }
-        else if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+        else if (e.getKeyCode() == KeyEvent.VK_RIGHT)               //turn kart1 right if right key is pressed
         {
             kart1.updateDirection("right");
         }
-        else if(e.getKeyCode() == KeyEvent.VK_A)
+        else if(e.getKeyCode() == KeyEvent.VK_A)                    //turn kart2 left if A key is pressed
         {
             kart2.updateDirection("left");
         }
-        else if (e.getKeyCode() == KeyEvent.VK_D)
+        else if (e.getKeyCode() == KeyEvent.VK_D)                   //turn kart2 right if D key is pressed
         {
             kart2.updateDirection("right");
         }
-        else if (e.getKeyCode() == KeyEvent.VK_S)
+        else if (e.getKeyCode() == KeyEvent.VK_S)                   //decrease kart2 speed if S key is pressed
         {
             kart2.decreaseSpeed();
         }
-        else if (e.getKeyCode() == KeyEvent.VK_W)
+        else if (e.getKeyCode() == KeyEvent.VK_W)                   //increase kart2 speed if W key is pressed
         {
             kart2.increaseSpeed();
         }
@@ -151,7 +151,7 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
             kart2.stopKart();
         }
 
-        Rectangle outerEdge = new Rectangle(50, 100, 750, 500);         //racetrack outer bounds
-        Rectangle innerEdge = new Rectangle(150, 200, 550, 300);        //racetrack inner bounds
+        kart1.checkOuterCollision();
+        kart2.checkOuterCollision();
     }
 }

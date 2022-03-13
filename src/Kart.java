@@ -137,14 +137,51 @@ public class Kart
     public Point getLocation()
     {
         return location;
-    }
+    }       //return current kart location
 
     public void stopKart()
     {
         speed = 0;
+    }                 //set kart speed to zero
+
+    public Rectangle getBounds(){                         //return kart bounds
+        return new Rectangle(getLocation().x,getLocation().y,50,50);
     }
 
-    public Rectangle getBounds(){
-        return new Rectangle(getLocation().x,getLocation().y,50,50);
+    public void setLocationX(int newX) { location.x = newX; }           //set kart X coordinate to new coordinate
+
+    public void setLocationY(int newY) { location.y = newY; }           //set kart Y coordinate to new coordinate
+
+    public void checkOuterCollision()                    //check whether kart collides with outer bound
+    {
+        //( 50, 100, 750, 500 ) outer edge
+        if(getLocation().x < 50)
+        {
+            setLocationX(50);
+            stopKart();
+        }
+
+        if(getLocation().x > 750)
+        {
+            setLocationX(750);
+            stopKart();
+        }
+
+        if(getLocation().y < 100)
+        {
+            setLocationY(100);
+            stopKart();
+        }
+
+        if(getLocation().y > 550)
+        {
+            setLocationY(550);
+            stopKart();
+        }
+    }
+
+    public void checkInnerCollision()
+    {
+
     }
 }
