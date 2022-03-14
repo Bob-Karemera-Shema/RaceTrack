@@ -10,7 +10,10 @@ public class Frame extends JFrame
         setBounds(0,0,1000,1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        //Create container
+        Container container = getContentPane();
+
         //Create a kart instance and add it to the container
-        add(new RaceTrack());
+        container.add(new RaceTrack());
     }
 }

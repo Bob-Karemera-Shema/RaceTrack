@@ -1,5 +1,7 @@
+import java.applet.AudioClip;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
@@ -17,6 +19,7 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
     private Timer animationTimer;                       //Timer tool for animation
     private Kart kart1;                                 //First kart
     private Kart kart2;                                 //Second kart
+    private Clip soundEffect;                           //Sound effect when cars crash
 
     public RaceTrack()
     {
@@ -25,7 +28,7 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
         setBackground(Color.green);
         setFocusable(true);
         kart1 = new Kart(425,500);                             //initialise the first kart object
-        kart2 = new Kart(425,550);                             //initialise the second kart object
+        kart2 = new Kart(425,600);                             //initialise the second kart object
         kartImages1 = new ImageIcon[totalImages];       //initialise image array
         kartImages2 = new ImageIcon[totalImages];       //initialise image array
 
@@ -143,15 +146,21 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
 
     public void collisionDetection()                //collision detection method
     {
-        Rectangle car1 = kart1.getBounds();         //kart1 bounds
-        Rectangle car2 = kart2.getBounds();         //kart2 bounds
-
-        if(car1.intersects(car2)) {                 //check if rectangles intersect
-            kart1.stopKart();
-            kart2.stopKart();
+        if((kart2.getLocation().y >= kart1.getLocation().y && kart2.getLocation().y <= kart1.getLocation().y + 40)
+                || (kart2.getLocation().y + 40 >= kart1.getLocation().y && kart2.getLocation().y + 40 <= kart1.getLocation().y + 40))
+        {   //if the cars collide vertically
+            if(kart1.getLocation().x + 45 >= kart2.getLocation().x && !(kart1.getLocation().x >= kart2.getLocation().x + 45))
+            {  //and if the cars collide horizontally
+                kart1.stopKart();
+                kart2.stopKart();
+            }
         }
 
+        //( 150, 200, 550, 300 ); // inner edge
         kart1.checkOuterCollision();
+        kart1.checkInnerCollision(new Rectangle( 150, 200, 550, 300 ));
+
         kart2.checkOuterCollision();
+        kart2.checkInnerCollision(new Rectangle( 150, 200, 550, 300  ));
     }
 }

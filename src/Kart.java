@@ -180,8 +180,11 @@ public class Kart
         }
     }
 
-    public void checkInnerCollision()
+    public void checkInnerCollision(Rectangle innerBound)
     {
-
+        if(getBounds().intersects(innerBound))
+        {
+            stopKart();
+        }
     }
 }
