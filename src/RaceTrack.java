@@ -1,7 +1,5 @@
-import java.applet.AudioClip;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
@@ -10,16 +8,10 @@ import java.awt.event.KeyListener;
 
 public class RaceTrack extends JPanel implements ActionListener, KeyListener
 {
-    private final static String imageName1 = "kartRed";  //image file name prefix red kart
-    private final static String imageName2 = "kartBlue";  //image file name prefix blue kart
-    private ImageIcon kartImages1[];                          //kart 1 image array
-    private ImageIcon kartImages2[];                          //kart 2 image array
-    private final int totalImages = 16;                 //number of images
     private final int animationDelay = 100;             //animation delay in milliseconds
     private Timer animationTimer;                       //Timer tool for animation
     private Kart kart1;                                 //First kart
     private Kart kart2;                                 //Second kart
-    private Clip soundEffect;                           //Sound effect when cars crash
 
     public RaceTrack()
     {
@@ -27,18 +19,10 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
         setBounds(0,0,850,650);
         setBackground(Color.green);
         setFocusable(true);
-        kart1 = new Kart(425,500);                             //initialise the first kart object
-        kart2 = new Kart(425,600);                             //initialise the second kart object
-        kartImages1 = new ImageIcon[totalImages];       //initialise image array
-        kartImages2 = new ImageIcon[totalImages];       //initialise image array
-
-        for(int i = 0; i < totalImages; i++)            //load kart images to array
-        {
-            kartImages1[i] = new ImageIcon(getClass().getResource("images1/"
-                    + imageName1 + i + ".png"));
-            kartImages2[i] = new ImageIcon(getClass().getResource("images2/"
-                    + imageName2 + i + ".png"));
-        }
+        kart1 = new Kart(425,500, "kartRed");                             //initialise the first kart object
+        kart2 = new Kart(425,600,"kartBlue");                             //initialise the second kart object
+        kart1.populateImageArray();                                                         //load kart 1 images
+        kart2.populateImageArray();                                                         //load kart 2 images
         this.addKeyListener(this);
 
         StartAnimation();
@@ -66,8 +50,8 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
         g.drawLine( 425, 500, 425, 600 ); // start line
 
         //Draw karts
-        kartImages1[kart1.getCurrentImage()].paintIcon(this, g, kart1.getLocation().x, kart1.getLocation().y);
-        kartImages2[kart2.getCurrentImage()].paintIcon(this, g, kart2.getLocation().x, kart2.getLocation().y);
+        kart1.getCurrentImage().paintIcon(this, g, kart1.getLocation().x, kart1.getLocation().y);
+        kart2.getCurrentImage().paintIcon(this, g, kart2.getLocation().x, kart2.getLocation().y);
 
         if(animationTimer.isRunning())                  //Only refreshes kart locations if timer is running
         {
@@ -146,21 +130,22 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
 
     public void collisionDetection()                //collision detection method
     {
+        //Collision detection between karts
         if((kart2.getLocation().y >= kart1.getLocation().y && kart2.getLocation().y <= kart1.getLocation().y + 40)
                 || (kart2.getLocation().y + 40 >= kart1.getLocation().y && kart2.getLocation().y + 40 <= kart1.getLocation().y + 40))
-        {   //if the cars collide vertically
+        {   //if the karts collide vertically
             if(kart1.getLocation().x + 45 >= kart2.getLocation().x && !(kart1.getLocation().x >= kart2.getLocation().x + 45))
-            {  //and if the cars collide horizontally
+            {  //and if the karts collide horizontally
                 kart1.stopKart();
                 kart2.stopKart();
             }
         }
 
-        //( 150, 200, 550, 300 ); // inner edge
+        //Collision detection between karts and racetrack bounds
         kart1.checkOuterCollision();
-        kart1.checkInnerCollision(new Rectangle( 150, 200, 550, 300 ));
+        kart1.checkInnerCollision(new Rectangle( 150, 200, 550, 300 ));     //inner edge bounds
 
         kart2.checkOuterCollision();
-        kart2.checkInnerCollision(new Rectangle( 150, 200, 550, 300  ));
+        kart2.checkInnerCollision(new Rectangle( 150, 200, 550, 300  ));    //inner edge bounds
     }
 }

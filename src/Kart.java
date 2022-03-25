@@ -1,25 +1,61 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Kart
-{
+public class Kart extends Component {
     private Point location;                             //current kart location
     private float speed;                                //current kart speed
     private int direction;                              //moving kart direction
-    private int image = 0;                              //current image index in loop
-    private int changeTime = 1;                         //constant change in time  100ms = 1s
+    private int imageIndex = 0;                         //current image index in loop
+    private ImageIcon[] kartImages;                     //kart 2 image array
+    private String kartColor;                           //kart color attribute
+    private final int totalImages = 16;                 //number of images
 
-    public Kart(int x, int y)
+    public Kart(int x, int y, String kartColor)
     {
         location = new Point( x, y );                   //kart starting position
         speed = 0;                                      //kart starts at rest
         direction = 0;                                  //initial kart direction
+        this.kartColor = kartColor;                     //Assign kart color
+        kartImages = new ImageIcon[totalImages];       //initialise image array
     }
 
-    public int getCurrentImage()
+    public void populateImageArray()
     {
-        return image;
-    }      //return current kart image index
+        //Load images to display the kart as it moves on the screen
+        if(kartColor.equals("kartRed"))
+        {
+            loadKartImages(1);
+        }
+
+        if(kartColor.equals("kartBlue"))
+        {
+            loadKartImages(2);
+        }
+    }
+
+    public void loadKartImages(int folderNumber)
+    {
+        String message = "Kart Images not found";
+        try
+        {
+            for (int i = 0; i < totalImages; i++)            //load kart images to array
+            {
+                kartImages[i] = new ImageIcon(getClass().getResource("images" + folderNumber + "/"
+                        + kartColor + i + ".png"));
+            }
+        }
+        catch (Exception e)
+        {
+            JOptionPane.showMessageDialog(this,"Images not found",
+                    "Loading error",JOptionPane.ERROR_MESSAGE); //inform user
+        }
+    }
+
+    public ImageIcon getCurrentImage()
+    {
+        //return current kart image
+        return kartImages[imageIndex];
+    }
 
     public void displaceKart()
     {
@@ -111,7 +147,7 @@ public class Kart
             if(direction < 0)
             {    direction = 15;    }
 
-            image = direction;
+            imageIndex = direction;
         }
         if(newDirection.equals("right"))
         {
@@ -120,7 +156,7 @@ public class Kart
             if(direction > 15)
             {    direction = 0;     }
 
-            image = direction;
+            imageIndex = direction;
         }
     }
 
