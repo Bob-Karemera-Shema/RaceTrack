@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Kart extends Component {
+public class Kart{
     private Point location;                             //current kart location
     private float speed;                                //current kart speed
     private int direction;                              //moving kart direction
@@ -46,7 +46,7 @@ public class Kart extends Component {
         }
         catch (Exception e)
         {
-            JOptionPane.showMessageDialog(this,"Images not found",
+            JOptionPane.showMessageDialog(null,"Images not found",
                     "Loading error",JOptionPane.ERROR_MESSAGE); //inform user
         }
     }
