@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class Frame extends JFrame
 {
@@ -14,6 +16,14 @@ public class Frame extends JFrame
         Container container = getContentPane();
 
         //Create a kart instance and add it to the container
-        container.add(new RaceTrack());
+        container.add(new RaceTrack(this));
+    }
+
+    public void ParentCloseMe(){
+        //method to close the frame
+        // Hide the frame
+        setVisible(false);
+        // If the frame is no longer needed, call dispose
+        dispose();
     }
 }

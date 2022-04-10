@@ -1,10 +1,7 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 public class RaceTrack extends JPanel implements ActionListener, KeyListener
 {
@@ -12,15 +9,17 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
     private Timer animationTimer;                       //Timer tool for animation
     private Kart kart1;                                 //First kart
     private Kart kart2;                                 //Second kart
+    private Frame parent;                               //Frame containing panel
 
-    public RaceTrack()
+    public RaceTrack(Frame parent)
     {
         setLayout(null);                                //suppress default panel layout features
         setBounds(0,0,850,650);
         setBackground(Color.green);
         setFocusable(true);
+        this.parent = parent;
         kart1 = new Kart(425,500, "kartRed");                             //initialise the first kart object
-        kart2 = new Kart(425,600,"kartBlue");                             //initialise the second kart object
+        kart2 = new Kart(425,550,"kartBlue");                             //initialise the second kart object
         kart1.populateImageArray();                                                         //load kart 1 images
         kart2.populateImageArray();                                                         //load kart 2 images
         this.addKeyListener(this);
@@ -30,6 +29,8 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
 
     public void paintComponent(Graphics g)              //Draw racetrack and current kart locations
     {
+        if(animationTimer.isRunning())                  //Only refreshes display if timer is running
+        {
         super.paintComponent(g);
 
         //Draw racetrack
@@ -53,8 +54,6 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
         kart1.getCurrentImage().paintIcon(this, g, kart1.getLocation().x, kart1.getLocation().y);
         kart2.getCurrentImage().paintIcon(this, g, kart2.getLocation().x, kart2.getLocation().y);
 
-        if(animationTimer.isRunning())                  //Only refreshes kart locations if timer is running
-        {
             kart1.displaceKart();
             kart2.displaceKart();
             collisionDetection();
@@ -130,6 +129,12 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
 
     public void collisionDetection()                //collision detection method
     {
+        collisionBetweenKarts();
+        collisionWithBoundaries();
+    }
+
+    public void collisionBetweenKarts()
+    {
         //Collision detection between karts
         if((kart2.getLocation().y >= kart1.getLocation().y && kart2.getLocation().y <= kart1.getLocation().y + 40)
                 || (kart2.getLocation().y + 40 >= kart1.getLocation().y && kart2.getLocation().y + 40 <= kart1.getLocation().y + 40))
@@ -138,14 +143,16 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
             {  //and if the karts collide horizontally
                 kart1.stopKart();
                 kart2.stopKart();
+                StopAnimation();
+                JOptionPane.showMessageDialog(this, "Karts crashed into each other!" +
+                        " No winner for this race", "Collision Detected", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
 
-        //Collision detection between karts and racetrack bounds
-        kart1.checkOuterCollision();
-        kart1.checkInnerCollision(new Rectangle( 150, 200, 550, 300 ));     //inner edge bounds
-
-        kart2.checkOuterCollision();
-        kart2.checkInnerCollision(new Rectangle( 150, 200, 550, 300  ));    //inner edge bounds
+    public void endGame()
+    {
+        //Close Frame containing panel
+        parent.ParentCloseMe();
     }
 }
