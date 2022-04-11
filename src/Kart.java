@@ -46,6 +46,7 @@ public class Kart{
         }
         catch (Exception e)
         {
+            //notify player kart images were not found
             JOptionPane.showMessageDialog(null,"Images not found",
                     "Loading error",JOptionPane.ERROR_MESSAGE); //inform user
         }
@@ -146,6 +147,7 @@ public class Kart{
 
     public void updateDirection(String newDirection)
     {
+        //updates the direction of the kart while it moves
         if(newDirection.equals("left"))
         {
             direction--;
@@ -229,6 +231,7 @@ public class Kart{
 
     public boolean checkInnerCollision(Rectangle innerBound)
     {
+        //method to check collision with grass
         if(getBounds().intersects(innerBound))
         {
             stopKart();

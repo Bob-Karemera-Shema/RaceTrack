@@ -1,7 +1,14 @@
-import java.awt.event.*;
+import ddf.minim.AudioPlayer;
+import ddf.minim.Minim;
+
+import javax.sound.sampled.*;
 import javax.swing.*;
-import javax.swing.Timer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.*;
 
 public class RaceTrack extends JPanel implements ActionListener, KeyListener
 {
@@ -29,8 +36,6 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
 
     public void paintComponent(Graphics g)              //Draw racetrack and current kart locations
     {
-        if(animationTimer.isRunning())                  //Only refreshes display if timer is running
-        {
         super.paintComponent(g);
 
         //Draw racetrack
@@ -53,11 +58,6 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
         //Draw karts
         kart1.getCurrentImage().paintIcon(this, g, kart1.getLocation().x, kart1.getLocation().y);
         kart2.getCurrentImage().paintIcon(this, g, kart2.getLocation().x, kart2.getLocation().y);
-
-            kart1.displaceKart();
-            kart2.displaceKart();
-            collisionDetection();
-        }
     }
 
     public void StartAnimation()
@@ -79,6 +79,11 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
     public void actionPerformed(ActionEvent event)
     {
         repaint();
+
+        //update kart positions and detect collision
+        kart1.displaceKart();
+        kart2.displaceKart();
+        collisionDetection();
     }
 
     @Override
@@ -145,8 +150,41 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
                 kart2.stopKart();
                 StopAnimation();
                 JOptionPane.showMessageDialog(this, "Karts crashed into each other!" +
-                        " No winner for this race", "Collision Detected", JOptionPane.ERROR_MESSAGE);
+                        " No winner for this race", "Collision Detected", JOptionPane.INFORMATION_MESSAGE);
             }
+        }
+    }
+    public void collisionWithBoundaries() {
+        //Collision detection between karts and racetrack bounds
+        if(kart1.checkOuterCollision())
+        {
+            StopAnimation();        //Stop animation as soon as a crash is detected
+            JOptionPane.showMessageDialog(parent, "Kart" + kart1.getKartColor() + " crashed!" +
+                    " Kart" + kart2.getKartColor() + " wins.", "Collision Detected", JOptionPane.INFORMATION_MESSAGE);
+            endGame();
+        }
+
+        if(kart1.checkInnerCollision(new Rectangle( 150, 200, 550, 300 )))     //inner edge bounds
+        {
+            StopAnimation();
+            JOptionPane.showMessageDialog(parent, "Kart" + kart1.getKartColor() + " crashed!" +
+                    " Kart" + kart2.getKartColor() + " wins.", "Collision Detected", JOptionPane.INFORMATION_MESSAGE);
+            endGame();
+        }
+        if(kart2.checkOuterCollision())
+        {
+            StopAnimation();
+            JOptionPane.showMessageDialog(parent, "Kart" + kart2.getKartColor() + " crashed!" +
+                    " Kart" + kart1.getKartColor() + " wins.", "Collision Detected", JOptionPane.INFORMATION_MESSAGE);
+            endGame();
+        }
+
+        if(kart2.checkInnerCollision(new Rectangle( 150, 200, 550, 300 )))     //inner edge bounds
+        {
+            StopAnimation();
+            JOptionPane.showMessageDialog(parent, "Kart" + kart2.getKartColor() + " crashed!" +
+                    " Kart" + kart1.getKartColor() + " wins.", "Collision Detected", JOptionPane.INFORMATION_MESSAGE);
+            endGame();
         }
     }
 
