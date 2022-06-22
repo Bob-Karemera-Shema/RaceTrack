@@ -12,6 +12,10 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
     private Kart kart1;                                 //First kart
     private Kart kart2;                                 //Second kart
     private Frame parent;                               //Frame containing panel
+    private JLabel raceBoardTitle;                           //Race information title label
+    private JLabel ownKartLaps;                           //Race information label
+    private JLabel foreignKartLaps;                           //Race information label
+    private JButton exitButton;                         //Exit button
 
     public RaceTrack(Frame parent)
     {
@@ -20,11 +24,30 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
         setBackground(Color.green);
         setFocusable(true);
         this.parent = parent;
-        kart1 = new Kart(425,500, "kartRed");                             //initialise the first kart object
-        kart2 = new Kart(425,550,"kartBlue");                             //initialise the second kart object
+        kart1 = new Kart(425,500, "Red");                             //initialise the first kart object
+        kart2 = new Kart(425,550,"Blue");                             //initialise the second kart object
         kart1.populateImageArray();                                                         //load kart 1 images
         kart2.populateImageArray();                                                         //load kart 2 images
         this.addKeyListener(this);
+
+        raceBoardTitle = new JLabel("Race Information");
+        raceBoardTitle.setBounds(50,600,100,50);
+
+        ownKartLaps = new JLabel("Kart " + kart1.getKartColor() + " laps:");
+        ownKartLaps.setBounds(50,650,100,50);
+
+        foreignKartLaps = new JLabel("Kart " + kart2.getKartColor() + " laps:");
+        foreignKartLaps.setBounds(50,700,100,50);
+
+        exitButton = new JButton("Exit");
+        exitButton.setBounds(800,30,100,50);
+        exitButton.setBackground(Color.white);
+        exitButton.addActionListener(this);
+
+        add(raceBoardTitle);
+        add(ownKartLaps);
+        add(foreignKartLaps);
+        add(exitButton);
 
         StartAnimation();
     }
@@ -43,10 +66,10 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
         Color c5 = Color.green;
         g.setColor( c5 );
         g.fillRect( 150, 200, 550, 300 ); // inner edge
-        Color c3 = Color.yellow;
+        Color c3 = Color.black;
         g.setColor( c3 );
         g.drawRect( 100, 150, 650, 400 ); // mid-lane marker
-        Color c4 = Color.white;
+        Color c4 = Color.black;
         g.setColor( c4 );
         g.drawLine( 425, 500, 425, 600 ); // start line
 
@@ -73,12 +96,20 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
 
     public void actionPerformed(ActionEvent event)
     {
-        repaint();
-
-        //update kart positions and detect collision
-        kart1.displaceKart();
-        kart2.displaceKart();
-        collisionDetection();
+        if(event.getSource() == animationTimer)
+        {
+            repaint();        //Call repaint function to update display
+            updateRaceInformation();       //update race information displayed on the screen
+            kart1.displaceKart();         //update kart position
+            kart2.displaceKart();         //update kart position
+            checkWinner();                 //check whether a kart has won the raceBlue
+            collisionDetection();           // detect collisions (between karts and with edges)
+        }
+        if(event.getSource() == exitButton)
+        {
+            StopAnimation();
+            endGame();
+        }
     }
 
     @Override
@@ -127,6 +158,14 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
 
     }
 
+    private void updateRaceInformation()
+    {
+        kart1.updateLaps();
+        kart2.updateLaps();
+        ownKartLaps.setText("Kart " + kart1.getKartColor() + " Laps: " + kart1.getLapCounter());
+        foreignKartLaps.setText("Kart " + kart2.getKartColor() + " Laps: " + kart2.getLapCounter());
+    }
+
     public void collisionDetection()                //collision detection method
     {
         collisionBetweenKarts();
@@ -146,6 +185,7 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
                 StopAnimation();
                 JOptionPane.showMessageDialog(this, "Karts crashed into each other!" +
                         " No winner for this race", "Collision Detected", JOptionPane.INFORMATION_MESSAGE);
+                endGame();
             }
         }
     }
@@ -180,6 +220,32 @@ public class RaceTrack extends JPanel implements ActionListener, KeyListener
             JOptionPane.showMessageDialog(parent, "Kart" + kart2.getKartColor() + " crashed!" +
                     " Kart" + kart1.getKartColor() + " wins.", "Collision Detected", JOptionPane.INFORMATION_MESSAGE);
             endGame();
+        }
+    }
+
+    private void checkWinner()
+    {
+        //the first kart to complete three laps wins the race
+        if (kart1.getLapCounter() == 4 && kart2.getLapCounter() < 4)
+        {
+            JOptionPane.showMessageDialog(this, "Kart" + kart1.getKartColor() + " wins!"
+                        , "Race Finished", JOptionPane.INFORMATION_MESSAGE);
+            StopAnimation();
+        }
+
+
+        if (kart1.getLapCounter() < 4 && kart2.getLapCounter() == 4)
+        {
+            JOptionPane.showMessageDialog(this, "Kart" + kart2.getKartColor() + " wins!"
+                        , "Race Finished", JOptionPane.INFORMATION_MESSAGE);
+            StopAnimation();
+        }
+
+        if (kart1.getLapCounter() == 4 && kart2.getLapCounter() == 4)
+        {
+            JOptionPane.showMessageDialog(this, "The race ends in a tie. No winner!"
+                        , "Race Finished", JOptionPane.INFORMATION_MESSAGE);
+            StopAnimation();
         }
     }
 

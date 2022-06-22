@@ -5,10 +5,16 @@ public class Kart{
     private Point location;                             //current kart location
     private float speed;                                //current kart speed
     private int direction;                              //moving kart direction
-    private int imageIndex = 0;                         //current image index in loop
+    private int imageIndex;                         //current image index in loop
     private ImageIcon[] kartImages;                     //kart 2 image array
     private String kartColor;                           //kart color attribute
     private final int totalImages = 16;                 //number of images
+    private boolean alive;
+    private String collisionArea;
+    private int lapCounter;
+    private boolean threeQuaterWayMark;                 // helps ensure a kart has travelled three quarters of the track distance
+                                                        // before reaching the finish line in order to increment laps
+                                                        // done when the kart reaches the finish line
 
     public Kart(int x, int y, String kartColor)
     {
@@ -17,17 +23,21 @@ public class Kart{
         direction = 0;                                  //initial kart direction
         this.kartColor = kartColor;                     //Assign kart color
         kartImages = new ImageIcon[totalImages];       //initialise image array
+        alive = true;                                   //kart is alive
+        lapCounter = 1;
+        threeQuaterWayMark = false;
+        imageIndex = 0;
     }
 
     public void populateImageArray()
     {
         //Load images to display the kart as it moves on the screen
-        if(kartColor.equals("kartRed"))
+        if(kartColor.equals("Red"))
         {
             loadKartImages(1);
         }
 
-        if(kartColor.equals("kartBlue"))
+        if(kartColor.equals("Blue"))
         {
             loadKartImages(2);
         }
@@ -40,7 +50,7 @@ public class Kart{
         {
             for (int i = 0; i < totalImages; i++)            //load kart images to array
             {
-                kartImages[i] = new ImageIcon(getClass().getResource("images" + folderNumber + "/"
+                kartImages[i] = new ImageIcon(getClass().getResource("images" + folderNumber + "/kart"
                         + kartColor + i + ".png"));
             }
         }
@@ -238,5 +248,29 @@ public class Kart{
             return true;
         }
         return false;
+    }
+
+    public void updateLaps()
+    {
+        if(threeQuaterWayMark && location.x + 10 <= 425 && location.y > 400 &&
+                location.y < 700 && direction == 0)
+        {
+            threeQuaterWayMark = false;
+            lapCounter += 1;
+        }
+
+        if(location.x >= 650 && location.y >= 325 && location.y < 345)
+        {
+            threeQuaterWayMark = true;
+        }
+    }
+
+    public int getLapCounter()
+    {
+        return lapCounter;
+    }
+
+    public void setKartLaps(int lapUpdate) {
+        lapCounter = lapUpdate;
     }
 }
